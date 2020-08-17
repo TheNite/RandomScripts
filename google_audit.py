@@ -4,15 +4,17 @@ import yaml
 import csv
 
 """
-Quick and dirty way of auditing pre emptive gcp permissions
-Requires glcoud to be install and authicanted because it will use it 
+Quick and dirty way of auditing pre-emptive gcp permissions
+Requires gcloud to be install and authenticated because it will use it 
 to generate yaml files and parse through them. 
 
 This also can be improved by using google's python api instead of gcloud 
 
 ONLY TESTED ON MACOS, and will only work there because I'm using bash commands
 """
+
 company = ''
+
 
 # write output of gcloud to projects.txt
 def get_project_list(all=False):
@@ -41,7 +43,7 @@ def get_project_list(all=False):
 
 def parseYamlFile(directory, csv_file="google_audit.csv", permission='roles/owner'):
     """ Parse yaml file for members which have
-    the permisisosn roles/editor assign to them and
+    the permissions roles/editor assign to them and
     output into a csv file based on yaml file name in the
     directory passed to the function
     """
@@ -65,20 +67,20 @@ def make_yaml_directory(directory="yaml"):
     try:
         shutil.rmtree(os.path.join(os.getcwd(), directory))
     except:
-        pass
+        print('Error')
 
     try:
         os.mkdir(directory)
         return os.path.join(os.getcwd(), directory)
     except:
-        pass
+        print('Error')
 
 
 def move_yaml_files(dest, source=os.getcwd()):
     """
     moves yaml file in current directory to another directory
-    :param dst:
-    :param src:
+    :param dest:
+    :param source:
     :return:
     """
     print("Moving Yaml Files....")
