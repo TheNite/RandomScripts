@@ -8,10 +8,11 @@ Quick and dirty way of auditing pre emptive gcp permissions
 Requires glcoud to be install and authicanted because it will use it 
 to generate yaml files and parse through them. 
 
-This also can be improved by using gooogle's pyyhon api instead of gcloud 
+This also can be improved by using google's python api instead of gcloud 
 
 ONLY TESTED ON MACOS, and will only work there because I'm using bash commands
 """
+company = ''
 
 # write output of gcloud to projects.txt
 def get_project_list(all=False):
@@ -29,10 +30,10 @@ def get_project_list(all=False):
           gcloud projects list | while $project read a b c; do; echo $a >> projects.txt; done''')
     else:
         print('using gcloud to get all Company-format projects name...')
-        os.system('''
+        os.system(f'''
          > projects.txt
          gcloud projects list | while $project read a b c; do
-         if [[ $a == Company* ]]; then
+         if [[ $a == {company}* ]]; then
             echo $a >> projects.txt
         fi
         done''')
