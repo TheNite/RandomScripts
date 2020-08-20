@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/python
 import ctypes, sys, subprocess, os
 
 '''
@@ -12,23 +12,34 @@ def reboot_windows():
     print('Rebooting...')
     os.system('shutdown -t 0 -r -f')
 
+
 def enable_virtualbox():
     subprocess.call('powershell.exe bcdedit /set hypervisorlaunchtype off', shell=True)
-    subprocess.call('powershell.exe dism.exe /online /disable-feature /featurename:Microsoft-Windows-Subsystem-Linux /norestart', shell=True)
-    subprocess.call('powershell.exe dism.exe /online /disable-feature /featurename:VirtualMachinePlatform /norestart', shell=True)
+    subprocess.call(
+        'powershell.exe dism.exe /online /disable-feature /featurename:Microsoft-Windows-Subsystem-Linux /norestart',
+        shell=True)
+    subprocess.call('powershell.exe dism.exe /online /disable-feature /featurename:VirtualMachinePlatform /norestart',
+                    shell=True)
     reboot_windows()
+
 
 def enable_wsl2():
     subprocess.call('powershell.exe bcdedit /set hypervisorlaunchtype auto', shell=True)
-    subprocess.call('powershell.exe dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart', shell=True)
-    subprocess.call('powershell.exe dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart', shell=True)
+    subprocess.call(
+        'powershell.exe dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart',
+        shell=True)
+    subprocess.call(
+        'powershell.exe dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart',
+        shell=True)
     reboot_windows()
+
 
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()
     except:
         return False
+
 
 def main():
     if is_admin():
@@ -46,7 +57,8 @@ def main():
         # Re-run the program with admin rights
         ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
 
-if __name__ == '__name__':
+
+if __name__ == '__main__':
     if sys.platform == 'win32':
         main()
     else:
