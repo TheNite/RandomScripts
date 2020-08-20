@@ -1,10 +1,15 @@
 #!/usr/bin/python
-import ctypes, sys, subprocess, os
+import ctypes
+import os
+import subprocess
+import sys
 
 '''
 Virtualbox and WSL2 can not be run together this 
-script will allow to swtich between running virtualbox and wsl2  
+script will allow to switch between running virtualbox and wsl2  
 by running all the necessary commands for you. Only works on windows.
+
+Does not check if your computer currently meets minimum requirements for wsl
 '''
 
 
@@ -31,6 +36,7 @@ def enable_wsl2():
     subprocess.call(
         'powershell.exe dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart',
         shell=True)
+    subprocess.call('powershell.exe wsl --set-default-version 2', shell=True)
     reboot_windows()
 
 
@@ -43,7 +49,7 @@ def is_admin():
 
 def main():
     if is_admin():
-        answer = input('VirtualBox or WSL?: ')
+        answer = input('VirtualBox or WSL2?: ')
         if 'vi' in answer.lower():
             print('enabling virtualbox')
             enable_virtualbox()
@@ -51,8 +57,7 @@ def main():
             print('enabling wsl2')
             enable_wsl2()
         else:
-            print('Unkown Command')
-
+            print('Unknown Command')
     else:
         # Re-run the program with admin rights
         ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, " ".join(sys.argv), None, 1)
@@ -61,5 +66,3 @@ def main():
 if __name__ == '__main__':
     if sys.platform == 'win32':
         main()
-    else:
-        sys.exit(1)
