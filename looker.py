@@ -1,17 +1,17 @@
 import looker_sdk
-import json
+
 looker = looker_sdk.init31("./looker.ini")
+dict = {}
+
 
 def get_all_users():
     """Return a list of all users"""
-    users = looker.all_users(fields="id, email")
-    return users
+    return looker.all_users(fields="id, email, ")
 
-users = get_all_users()
 
-dict = {}
-for user in users:
-    print(f'Email:{user.email}, ID: {user.id}')
+for user in get_all_users():
     dict[user.id] = user.email
 
-print(sorted(dict.items()))
+for id, email in sorted(dict.items()):
+    if email.endswith("@looker.com"):
+        print(f'ID: {id}, Email: {email}')
