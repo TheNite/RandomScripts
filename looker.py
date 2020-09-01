@@ -6,7 +6,7 @@ dict = {}
 
 def get_all_users():
     """Return a list of all users"""
-    return looker.all_users(fields="id, email, ")
+    return looker.all_users(fields="id, email")
 
 
 for user in get_all_users():
