@@ -352,3 +352,4 @@ tags
 # Persistent undo
 [._]*.un~
 /looker.ini
+looker.csb
