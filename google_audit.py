@@ -1,7 +1,8 @@
+import csv
 import os
 import shutil
+
 import yaml
-import csv
 
 """
 Quick and dirty way of auditing pre-emptive gcp permissions
@@ -13,7 +14,7 @@ This also can be improved by using google's python api instead of gcloud
 ONLY TESTED ON MACOS, and will only work there because I'm using bash commands
 """
 
-company = ''
+company = ""
 
 
 # write output of gcloud to projects.txt
@@ -26,54 +27,61 @@ def get_project_list(all=False):
     :return:
     """
     if all:
-        print('Using gcloud to get all projects names....')
-        os.system('''
+        print("Using gcloud to get all projects names....")
+        os.system(
+            """
          > projects.txt
-          gcloud projects list | while $project read a b c; do; echo $a >> projects.txt; done''')
+          gcloud projects list | while $project read a b c; do; echo $a >> projects.txt; done"""
+        )
     else:
-        print('using gcloud to get all Company-format projects name...')
-        os.system(f'''
+        print("using gcloud to get all Company-format projects name...")
+        os.system(
+            f"""
          > projects.txt
          gcloud projects list | while $project read a b c; do
          if [[ $a == {company}* ]]; then
             echo $a >> projects.txt
         fi
-        done''')
+        done"""
+        )
 
 
-def parseYamlFile(directory, csv_file="google_audit.csv", permission='roles/owner'):
-    """ Parse yaml file for members which have
+def parseYamlFile(directory, csv_file="google_audit.csv", permission="roles/owner"):
+    """Parse yaml file for members which have
     the permissions roles/editor assign to them and
     output into a csv file based on yaml file name in the
     directory passed to the function
     """
-    print('Creating CSV Files.....')
-    with open(csv_file, 'w') as csvFile:
+    print("Creating CSV Files.....")
+    with open(csv_file, "w") as csvFile:
         writer = csv.writer(csvFile)
-        writer.writerow(['Project', 'Role', 'Members'])
+        writer.writerow(["Project", "Role", "Members"])
 
-    print('Parsing Yaml File...')
+    print("Parsing Yaml File...")
     for yaml_file in os.listdir(directory):
         with open(os.path.join(directory, yaml_file)) as f:
             data = yaml.load(f, Loader=yaml.FullLoader)
-            for item in data['bindings']:
-                if item['role'] == permission:
-                    with open(csv_file, 'a') as csvFile:
+            for item in data["bindings"]:
+                if item["role"] == permission:
+                    with open(csv_file, "a") as csvFile:
                         writer = csv.writer(csvFile)
-                        writer.writerow([f'{yaml_file[:-4]}', f'{permission}', f'{item["members"]}'])
+                        writer.writerow(
+                            [f"{yaml_file[:-4]}", f"{permission}",
+                                f'{item["members"]}']
+                        )
 
 
 def make_yaml_directory(directory="yaml"):
     try:
         shutil.rmtree(os.path.join(os.getcwd(), directory))
     except:
-        print('Error')
+        print("Error")
 
     try:
         os.mkdir(directory)
         return os.path.join(os.getcwd(), directory)
     except:
-        print('Error')
+        print("Error")
 
 
 def move_yaml_files(dest, source=os.getcwd()):
@@ -85,7 +93,7 @@ def move_yaml_files(dest, source=os.getcwd()):
     """
     print("Moving Yaml Files....")
     for file in os.listdir(source):
-        if file.endswith('.yaml'):
+        if file.endswith(".yaml"):
             shutil.move(file, dest)
 
 
@@ -93,12 +101,12 @@ def main():
     get_project_list()
     directory = make_yaml_directory()
 
-    with open('projects.txt') as f:
+    with open("projects.txt") as f:
         contents = f.readlines()
 
     contents = list(map(lambda x: x.strip(), contents))
 
-    print('Creating YAML IAM policy files......')
+    print("Creating YAML IAM policy files......")
     for project in contents:
         os.system(f"gcloud projects get-iam-policy {project} > {project}.yaml")
 
