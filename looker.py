@@ -6,12 +6,13 @@ dict = {}
 allow_admins = []
 
 roles = {
-    'Admin': [2],
-    'Developer': [4],
-    'User': [3],
-    'Viewer': [5],
-    'Lite Admin': [6],
+    "Admin": [2],
+    "Developer": [4],
+    "User": [3],
+    "Viewer": [5],
+    "Lite Admin": [6],
 }
+
 
 def get_all_users():
     """Return a list of all users"""
@@ -38,8 +39,10 @@ def get_key(val: list):
 #
 
 for id, [email, role] in sorted(dict.items()):
-    if not email.endswith('@looker.com') and email not in allow_admins and role == roles['Lite Admin']:
-        print(f'ID: {id}, Email: {email}, Role: {role}')
-        #looker.set_user_roles(id, [])
-
-
+    if (
+        not email.endswith("@looker.com")
+        and email not in allow_admins
+        and role == roles["Lite Admin"]
+    ):
+        print(f"ID: {id}, Email: {email}, Role: {role}")
+        # looker.set_user_roles(id, [])
