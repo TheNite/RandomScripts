@@ -1,8 +1,9 @@
 import shutil
 
-'''
+"""
 Delete the Star Citizen user folder
-'''
+"""
+
 
 def delete_folder_and_files(folder):
     try:
@@ -12,7 +13,10 @@ def delete_folder_and_files(folder):
         print("Can't access file")
     except FileNotFoundError:
         print("File Not found!")
-        
-star_citizen_user_location= "C:\\Program Files\\Roberts Space Industries\\StarCitizen\\LIVE\\User"
+
+
+star_citizen_user_location = (
+    "C:\\Program Files\\Roberts Space Industries\\StarCitizen\\LIVE\\User"
+)
 
 delete_folder_and_files(star_citizen_user_location)
